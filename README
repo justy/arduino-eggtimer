@@ -1,0 +1,13 @@
+A simple boiled egg timer
+
+This sketch was developed in tandem with Seeedstudio's brick system, however that system isn't needed- all that's required are the components used:
+
+• LCD module
+• Potentiometer
+• Buzzer
+• Pushbutton
+• Thermistor (optional)
+
+Have Fun and may your eggs be boiled to your specifications.
+
+Justy
