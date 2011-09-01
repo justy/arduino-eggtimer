@@ -189,23 +189,12 @@ void loop() {
 void playAnim() {
 
   animFrame++;
-  if (animFrame > 4) animFrame = 0;
+  if (animFrame > 3) animFrame = 0;
 
   delay(100);
   switch(animFrame) {
 
-    case 0: 
-    lcd.setCursor(14,0); 
-    lcd.print("*"); 
-    lcd.setCursor(14,1); 
-    lcd.print("."); 
-    lcd.setCursor(15,1); 
-    lcd.print("."); 
-    lcd.setCursor(15,0); 
-    lcd.print(" "); 
-    break;
-    
-  case 1: 
+  case 0: 
     lcd.setCursor(14,0); 
     lcd.print("*"); 
     lcd.setCursor(14,1); 
@@ -216,7 +205,7 @@ void playAnim() {
     lcd.print(" "); 
     break;
 
-  case 2:
+  case 1:
     lcd.setCursor(15,0); 
     lcd.print("*"); 
     lcd.setCursor(14,0); 
@@ -227,7 +216,7 @@ void playAnim() {
     lcd.print(" "); 
     break;
 
-  case 3:
+  case 2:
     lcd.setCursor(15,1); 
     lcd.print("*"); 
     lcd.setCursor(15,0); 
@@ -238,19 +227,8 @@ void playAnim() {
     lcd.print(" "); 
     break;
 
-  case 4:
+  case 3:
     lcd.setCursor(14,1); 
-    lcd.print("*"); 
-    lcd.setCursor(15,1); 
-    lcd.print("."); 
-    lcd.setCursor(15,0); 
-    lcd.print("."); 
-    lcd.setCursor(14,0); 
-    lcd.print(" "); 
-    break;
-    
-     case 6:
-    lcd.setCursor(13,1); 
     lcd.print("*"); 
     lcd.setCursor(15,1); 
     lcd.print("."); 
@@ -268,7 +246,7 @@ void displayTemp() {
 
   lcd.setCursor(0, 1);
   // print the number of seconds since reset:
-  int temp = analogRead(thermistorPin);
+  int temp = analogRead(PIN_Thermistor);
   float tt = temperature(temp);
   printFloat(tt, 1);
   lcd.print("C");
