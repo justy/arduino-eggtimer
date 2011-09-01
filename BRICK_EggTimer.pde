@@ -1,6 +1,24 @@
+/****************************************
+ Egg Timer a la Justy
+
+ A simple boiled egg timer
+
+ This sketch was developed in tandem with Seeedstudio's brick system, however that system isn't needed- all that's required are the components used:
+
+  • LCD module
+  • Potentiometer
+  • Buzzer
+  • Pushbutton
+  • Thermistor (optional)
+
+ Have Fun and may your eggs be boiled to your specifications.
+
+ Justy
+  
+*****************************************/
+
 #include <LiquidCrystal.h> // include the library code:
 #include <math.h>
-
 
 #define PIN_Thermistor 5
 #define PIN_Button 9
@@ -23,12 +41,12 @@ long timerValue = 0;
 long timer = 0;
 
 long lastMillis;
-long lastAnim;
+
 int animFrame = 0;
 
 boolean blinkFlag;
 
-int state = STATE_Init;
+int state = STATE_Init;  
 
 void setup() {
   
@@ -36,7 +54,7 @@ void setup() {
   
   blinkFlag = false;
 
-  pinMode(PIN_thermistor,INPUT);
+  pinMode(PIN_Thermistor,INPUT);
   pinMode(PIN_Pot, INPUT);
   pinMode(PIN_Button, INPUT);
   pinMode(PIN_Buzzer, OUTPUT);
@@ -51,7 +69,7 @@ void setup() {
   beep();
   beep();
   delay(1000);
-  lcd.clear();
+ 
 
 }
 
@@ -61,10 +79,10 @@ void loop() {
   switch (state) {
 
   case STATE_Init:
-    state = STATE_SetTimer;
     lcd.clear();
     delay(500);
     lcd.print("Timer:"); // Print a message to the LCD.
+    state = STATE_SetTimer;
     break;
 
   case STATE_SetTimer:
@@ -73,7 +91,7 @@ void loop() {
       delay(100);
 
       // Get the raw timer value
-      int rawPot = analogRead(PIN_Pot);
+      int rawPot = analogRead(PIN_Pot);  // [0..1023]
 
       // Convert it to desired milliseconds (where a max of 4 minutes = 1023)
       timerValue = TIME_multiplier * rawPot;
@@ -111,12 +129,9 @@ void loop() {
 
   case STATE_CountingDown:
     {
-
       playAnim();
 
       delay(100);
-
-      //timer -=100;
 
       // Find out the *actual* delta t
       long diff = millis() - lastMillis;
@@ -170,15 +185,12 @@ void loop() {
 
 }
 
+/**********************/
 void playAnim() {
 
   animFrame++;
   if (animFrame > 4) animFrame = 0;
 
-  //lcd.setCursor((animFrame-1)%4,0);
-  //lcd.print(" ");
-  //lcd.setCursor(animFrame,0);
-  //lcd.print(animFrame, DEC);
   delay(100);
   switch(animFrame) {
 
@@ -250,33 +262,16 @@ void playAnim() {
 
   }
 
-
-
-
-  /*
-  long diff = millis() - lastAnim;
-   lastAnim = millis();
-   
-   int animFrame = diff % 6;
-   
-   lcd.setCursor(14,0);
-   lcd.print(animFrame);
-   */
-
 }
 
 void displayTemp() {
 
-
-  // set the cursor to column 0, line 1 (note: line 1 is the second row, since counting begins with 0):
   lcd.setCursor(0, 1);
   // print the number of seconds since reset:
   int temp = analogRead(thermistorPin);
-  //lcd.print(0.01*int(100*temperature(temp)),DEC); // temp
   float tt = temperature(temp);
   printFloat(tt, 1);
   lcd.print("C");
-  //delay(100);
 
 }
 
@@ -284,20 +279,11 @@ void displayTemp() {
 double temperature(int rawADC) {
   return 0.1*((double)rawADC-248);
 }
-//  double Temp;
-
-//Temp = rawADC;
-//Temp = Temp +252-500; // some maths to convert to C
-//Temp = Temp / 10; // 
-
-//  return Temp;
-//}
 
 
 // printFloat prints out the float 'value' rounded to 'places' places after the decimal point
 void printFloat(float value, int places) {
 
-  //lcd.print("wtf?");
   // this is used to cast digits 
   int digit;
   float tens = 0.1;
