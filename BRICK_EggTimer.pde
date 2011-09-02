@@ -1,21 +1,21 @@
 /****************************************
- Egg Timer a la Justy
-
- A simple boiled egg timer
-
- This sketch was developed in tandem with Seeedstudio's brick system, however that system isn't needed- all that's required are the components used:
-
-  • LCD module
-  • Potentiometer
-  • Buzzer
-  • Pushbutton
-  • Thermistor (optional)
-
- Have Fun and may your eggs be boiled to your specifications.
-
- Justy
-  
-*****************************************/
+ * Egg Timer a la Justy  ('functional' branch, where I refactor and simplify)
+ * 
+ * A simple boiled egg timer
+ * 
+ * This sketch was developed in tandem with Seeedstudio's brick system, however that system isn't needed- all that's required are the components used:
+ * 
+ * • LCD module
+ * • Potentiometer
+ * • Buzzer
+ * • Pushbutton
+ * • Thermistor (optional)
+ * 
+ * Have Fun and may your eggs be boiled to your specifications.
+ * 
+ * Justy
+ * 
+ *****************************************/
 
 #include <LiquidCrystal.h> // include the library code:
 #include <math.h>
@@ -49,9 +49,9 @@ boolean blinkFlag;
 int state = STATE_Init;  
 
 void setup() {
-  
+
   lcd.begin(16, 2); // set up the LCD's number of columns and rows: 
-  
+
   blinkFlag = false;
 
   pinMode(PIN_Thermistor,INPUT);
@@ -69,24 +69,33 @@ void setup() {
   beep();
   beep();
   delay(1000);
- 
+
 
 }
 
-
+// Run our state machine.  This is written so that as little code as possible appears here.
 void loop() {
-
   switch (state) {
+  case STATE_Init: DO_Init(); break;
+  case STATE_SetTimer: DO_SetTimer(); break;
+  case STATE_CountingDown: DO_CountingDown; break;
+  case STATE_Buzzing: DO_Buzzing(); break;
+  }
+}
 
-  case STATE_Init:
-    lcd.clear();
-    delay(500);
-    lcd.print("Timer:"); // Print a message to the LCD.
-    state = STATE_SetTimer;
-    break;
+/**********************
+ * State Functions - one per state
+ * 
+ ***********************/
 
-  case STATE_SetTimer:
-    {
+void DO_Init() {
+  lcd.clear();
+  delay(500);
+  lcd.print("Timer:"); // Print a message to the LCD.
+  state = STATE_SetTimer;
+}
+
+void DO_SetTimer() {
       // Give the blink some sanity
       delay(100);
 
@@ -124,11 +133,9 @@ void loop() {
         state = STATE_CountingDown; 
         lastMillis = millis();
       }
-    }
-    break;
+}
 
-  case STATE_CountingDown:
-    {
+void DO_CountingDown() {
       playAnim();
 
       delay(100);
@@ -168,24 +175,27 @@ void loop() {
         lcd.setCursor(0,1);
         lcd.print("Ready!! :)");
       }
-    }
-    break;
+}
 
-  case STATE_Buzzing:
-    beep();
-    delay(500);
-    if (digitalRead(PIN_Button) == HIGH) {
-      timer = timerValue;
-      state = STATE_Init; 
-    }
-    break;
-
-
+void DO_Buzzing() {
+  beep();
+  beep();
+  delay(500);
+  if (digitalRead(PIN_Button) == HIGH) {
+    timer = timerValue;
+    state = STATE_Init; 
   }
+}
+
+
+
+
+/**********************/
+
+void displayTimer() {
 
 }
 
-/**********************/
 void playAnim() {
 
   animFrame++;
@@ -335,6 +345,7 @@ void beep() {
   }
 
 }
+
 
 
 
