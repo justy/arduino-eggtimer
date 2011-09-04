@@ -76,11 +76,20 @@ void setup() {
 // Run our state machine.  This is written so that as little code as possible appears here.
 void loop() {
   switch (state) {
-  case STATE_Init: DO_Init(); break;
-  case STATE_SetTimer: DO_SetTimer(); break;
-  case STATE_CountingDown: DO_CountingDown; break;
-  case STATE_Buzzing: DO_Buzzing(); break;
+  case STATE_Init: 
+    DO_Init(); 
+    break;
+  case STATE_SetTimer: 
+    DO_SetTimer(); 
+    break;
+  case STATE_CountingDown: 
+    DO_CountingDown();
+    break;
+  case STATE_Buzzing: 
+    DO_Buzzing(); 
+    break;
   }
+  
 }
 
 /**********************
@@ -96,85 +105,86 @@ void DO_Init() {
 }
 
 void DO_SetTimer() {
-      // Give the blink some sanity
-      delay(100);
+  // Give the blink some sanity
+  delay(100);
 
-      // Get the raw timer value
-      int rawPot = analogRead(PIN_Pot);  // [0..1023]
+  // Get the raw timer value
+  int rawPot = analogRead(PIN_Pot);  // [0..1023]
 
-      // Convert it to desired milliseconds (where a max of 4 minutes = 1023)
-      timerValue = TIME_multiplier * rawPot;
+  // Convert it to desired milliseconds (where a max of 4 minutes = 1023)
+  timerValue = TIME_multiplier * rawPot;
 
-      // Convert it to Human-friendly
-      int mins = int(timerValue/60000.0);
-      int secs = int(timerValue/1000) % 60;
+  // Convert it to Human-friendly
+  int mins = int(timerValue/60000.0);
+  int secs = int(timerValue/1000) % 60;
 
-      lcd.setCursor(7,0);
-      if (blinkFlag) {
-        //lcd.print(timerValue, DEC);
-        lcd.print(mins, DEC);
-        lcd.print("m ");
-        lcd.print(secs, DEC);
-        lcd.print("s");
-        // pad out the end
-        lcd.print(" ");
-      } 
-      else {
-        lcd.print("         "); 
-      }
-      blinkFlag = !blinkFlag;
+  lcd.setCursor(7,0);
+  if (blinkFlag) {
+    //lcd.print(timerValue, DEC);
+    lcd.print(mins, DEC);
+    lcd.print("m ");
+    lcd.print(secs, DEC);
+    lcd.print("s");
+    // pad out the end
+    lcd.print(" ");
+  } 
+  else {
+    lcd.print("         "); 
+  }
+  blinkFlag = !blinkFlag;
 
-      // Display the temp
-      displayTemp();
+  // Display the temp
+  displayTemp();
 
-      // Time to time?
-      if (!blinkFlag && digitalRead(PIN_Button) == HIGH) {
-        timer = timerValue;
-        state = STATE_CountingDown; 
-        lastMillis = millis();
-      }
+  // Time to time?
+  if (!blinkFlag && digitalRead(PIN_Button) == HIGH) {
+    timer = timerValue;
+    state = STATE_CountingDown; 
+    lastMillis = millis();
+  }
 }
 
 void DO_CountingDown() {
-      playAnim();
 
-      delay(100);
+  playAnim();
 
-      // Find out the *actual* delta t
-      long diff = millis() - lastMillis;
-      lastMillis = millis();
-      timer -= diff;
+  delay(100);
 
-      // Convert it to Human-friendly
-      int mins = int(timer/60000.0);
-      int secs = int(timer/1000) % 60;
+  // Find out the *actual* delta t
+  long diff = millis() - lastMillis;
+  lastMillis = millis();
+  timer -= diff;
 
-      lcd.setCursor(7,1);
-      if (blinkFlag || timer > 10000) {
+  // Convert it to Human-friendly
+  int mins = int(timer/60000.0);
+  int secs = int(timer/1000) % 60;
 
-        //lcd.print(timerValue, DEC);
-        lcd.print(mins, DEC);
-        lcd.print("m ");
-        lcd.print(secs, DEC);
-        lcd.print("s");
-        // pad out the end
-        lcd.print(" ");    
-      } 
-      else {
-        lcd.print("         "); 
-      }
-      blinkFlag = !blinkFlag;
+  lcd.setCursor(7,1);
+  if (blinkFlag || timer > 10000) {
 
-      displayTemp();
+    //lcd.print(timerValue, DEC);
+    lcd.print(mins, DEC);
+    lcd.print("m ");
+    lcd.print(secs, DEC);
+    lcd.print("s");
+    // pad out the end
+    lcd.print(" ");    
+  } 
+  else {
+    lcd.print("         "); 
+  }
+  blinkFlag = !blinkFlag;
 
-      // If within half a second
-      if (timer < 500) {
-        state = STATE_Buzzing;
-        lcd.clear();
-        lcd.print("Your Eggs are");
-        lcd.setCursor(0,1);
-        lcd.print("Ready!! :)");
-      }
+  displayTemp();
+
+  // If within half a second
+  if (timer < 500) {
+    state = STATE_Buzzing;
+    lcd.clear();
+    lcd.print("Your Eggs are");
+    lcd.setCursor(0,1);
+    lcd.print("Ready!! :)");
+  }
 }
 
 void DO_Buzzing() {
@@ -345,6 +355,7 @@ void beep() {
   }
 
 }
+
 
 
 
